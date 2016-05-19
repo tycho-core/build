@@ -26,35 +26,13 @@ PLATFORM_OPTS = {
 	# -----------------------------------------------------------------------------
 	'win32' : {
 		GENERATORS : [
-			{
-				GENERATOR_SHORT_NAME : 'vs2012',
-				GENERATOR_NAME : 'Visual Studio 2012',
-				GENERATOR_STR  : 'Visual Studio 11',
-				
-				TOOLSETS : [
-					{
-						TOOLSET_NAME   : "Intel C++ Compiler XE 15.0",
-						TOOLSET_STR    : "Intel"						
-					},
-					{
-						TOOLSET_NAME   : "LLVM-vs2012",
-						TOOLSET_STR    : "Clang"											
-					}
-				]
-			},
+
 			{
 				GENERATOR_SHORT_NAME : 'vs2013',
 				GENERATOR_NAME : 'Visual Studio 2013',
 				GENERATOR_STR  : 'Visual Studio 12',
 				TOOLSETS       : [
-					{
-						TOOLSET_NAME   : "Intel C++ Compiler XE 15.0",
-						TOOLSET_STR    : "Intel"						
-					},
-					{
-						TOOLSET_NAME   : "LLVM-vs2013",
-						TOOLSET_STR    : "Clang"											
-					}
+
 				]
 			},
 			{
@@ -120,7 +98,9 @@ Platform = ''
 PlatformOpts = None
 GeneratorName = ''
 Clean = False
+ScriptDir = os.path.dirname(os.path.realpath(__file__)) + os.sep
 BaseDir = os.path.dirname(os.path.realpath(__file__)) + os.sep
+
 
 if not sys.platform in PLATFORM_OPTS:
 	error("Platform not supported : " + sys.platform)
@@ -139,8 +119,12 @@ parser = argparse.ArgumentParser(description='Tycho cmake build',
 
 parser.add_argument('-g', '--generator', help='generator to build')
 parser.add_argument('-c', '--clean', help='deleting existing build tree before generating', action='store_true')
+parser.add_argument('base_dir', help='base directory to place output directories in')
 args = parser.parse_args()
 
+if args.base_dir:
+	BaseDir = args.base_dir
+	
 if args.clean:
 	Clean = True
 
@@ -188,15 +172,16 @@ if Generator == None:
 Generator[GENERATOR_PATH] = os.path.join(BaseDir, "build", Platform, Generator[GENERATOR_SHORT_NAME]);
 CMakeCommand = PlatformOpts[CMAKE_COMMAND]
 if PlatformOpts[CMAKE_COMMAND_RELATIVE]:
-	CMakeCommand = os.path.join(BaseDir, CMakeCommand)
+	CMakeCommand = os.path.join(ScriptDir, CMakeCommand)
 CMakeCmdLine = [CMakeCommand]
 if Toolset != None:
 	CMakeCmdLine.extend(['-T', Toolset[TOOLSET_NAME]])
-CMakeCmdLine.extend(['-G', Generator[GENERATOR_STR], str("..%s..%s..%ssrc" % (os.sep, os.sep, os.sep))])
+CMakeCmdLine.extend(['-G', Generator[GENERATOR_STR], str("..%s..%s..%s" % (os.sep, os.sep, os.sep))])
 
-print("Base Directory : " + BaseDir)
-print("Platform       : " + Platform)
-print("Generator      : " + Generator[GENERATOR_NAME])
+print("Base Directory   : " + BaseDir)
+print("Script Directory : " + ScriptDir)
+print("Platform         : " + Platform)
+print("Generator        : " + Generator[GENERATOR_NAME])
 
 if Toolset == None:
 	print("Toolset	      : {default}")
