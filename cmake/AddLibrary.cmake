@@ -1,7 +1,7 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.1)
 
 function(tycho_add_library name link_libs solution_folder)
-	message(STATUS "Adding library : ${name}")
+	message(STATUS "Adding library : ${name}  [${CMAKE_CURRENT_SOURCE_DIR}]")
 	set(lib_name ty${name})
 
 	# get all files in this directory

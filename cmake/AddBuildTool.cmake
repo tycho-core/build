@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.1)
 
 function(tycho_add_build_tool name link_libs)
 	message(STATUS "Adding build tool : ${name}")

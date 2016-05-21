@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.1)
 
 macro(tycho_lemon_command lemon_file)
 	set(lemon_output_header)
