@@ -1,9 +1,9 @@
 cmake_minimum_required (VERSION 3.1)
 
 # check we are building out of tree in the build directory
-message(STATUS ${CMAKE_BINARY_DIR})
-if(NOT ${CMAKE_BINARY_DIR} MATCHES ".+/build/.+$")
-	message(FATAL_ERROR "cmake must be run from src/build directory not from ${CMAKE_BINARY_DIR}")
+message(STATUS "Binary directory is ${CMAKE_BINARY_DIR}")
+if(NOT ${CMAKE_BINARY_DIR} MATCHES ".+/build(/.*)?$")
+	message(FATAL_ERROR "cmake must be run from build directory not from ${CMAKE_BINARY_DIR}")
 endif()
 
 # initial setup for unit testing
@@ -111,6 +111,7 @@ if(ty_use_boost)
 endif()
 
 # add tycho lib directory for all
+message(STATUS "Current source dir = ${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")
 
 # QT doesn't seem to use the output directories correctly.
@@ -167,3 +168,4 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake/AddBuildTool.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/AddTest.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/MakeSrcFolders.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/CompilerHelpers.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/FindCMakeFiles.cmake")
