@@ -67,6 +67,13 @@ PLATFORM_OPTS = {
 				GENERATOR_STR  		 : 'Xcode',
 				GENERATOR_BUILD_DIR : 'osx',
 				TOOLSETS             : []
+			},
+			{
+				GENERATOR_SHORT_NAME : 'ninja',
+				GENERATOR_NAME 		 : 'ninja',
+				GENERATOR_STR  		 : 'Ninja',
+				GENERATOR_BUILD_DIR : 'osx',
+				TOOLSETS             : []
 			}
 		],
 		CMAKE_COMMAND : 'cmake',
