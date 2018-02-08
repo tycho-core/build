@@ -21,7 +21,7 @@ set(ty_compiler_intel 0)
 set(ty_buildenv_qt 0)
 set(ty_platform_osx 0)
 set(ty_platform_windows 0)
-
+set(ty_use_boost 1)
 
 # setup global defines
 add_definitions(-DTYCHO)
@@ -48,6 +48,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 		add_definitions(-DTYCHO_PC=1)
 		add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 		add_definitions(-D_VARIADIC_MAX=10)
+		add_definitions(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE)
 	
 		if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 			# Clang 3.5.0 does not support windows exceptions
@@ -105,7 +106,7 @@ endif()
 if(ty_use_boost)
 	set(USE_BOOST_CACHE 1)
 	set(TargetArchitecture "x86")
-	include("cmake/AddBoost.cmake")
+	include("${CMAKE_CURRENT_LIST_DIR}/cmake/AddBoost.cmake")
 	include_directories("${BoostSourceDir}")
 	link_directories("${BoostSourceDir}/stage/lib/")
 endif()
@@ -127,7 +128,7 @@ if(ty_buildenv_qt)
 endif()
 
 # override where libraries, dll's and executable get built to
-set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
+set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/release)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/debug)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir}/lib/release)

@@ -74,11 +74,11 @@ function(ty_find_intel_compiler)
 			set(INTEL_COMPILER_FOUND 1 PARENT_SCOPE)
 			set(INTEL_COMPILER_VERSION 15 PARENT_SCOPE)
 			set(INTEL_ICLVARS_BAT "${composer_dir}/bin/iclvars.bat" PARENT_SCOPE)
-		endif()		
+		endif()
 endfunction()	
 
-set(BoostVersion 1.57.0)
-set(BoostSHA1 e151557ae47afd1b43dc3fac46f8b04a8fe51c12)
+set(BoostVersion 1.66.0)
+set(BoostSHA1 b6b284acde2ad7ed49b44e856955d7b1ea4e9459)
 
 
 
@@ -231,9 +231,9 @@ endif()
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${BoostSourceDir}/Build)
 
 # Apply patched files
-if(NOT "${BoostVersion}" STREQUAL "1.57.0")
-  message(FATAL_ERROR "Remove patched files from the source tree and delete corresponding 'configure_file' commands in this 'add_boost' CMake file.")
-endif()
+#if(NOT "${BoostVersion}" STREQUAL "1.57.0")
+#  message(FATAL_ERROR "Remove patched files from the source tree and delete corresponding 'configure_file' commands in this 'add_boost' CMake file.")
+#endif()
 #configure_file(patches/boost_1_55/boost/atomic/detail/cas128strong.hpp ${BoostSourceDir}/boost/atomic/detail/cas128strong.hpp COPYONLY)
 #configure_file(patches/boost_1_55/boost/atomic/detail/gcc-atomic.hpp ${BoostSourceDir}/boost/atomic/detail/gcc-atomic.hpp COPYONLY)
 #configure_file(patches/boost_1_55/boost/intrusive/detail/has_member_function_callable_with.hpp ${BoostSourceDir}/boost/intrusive/detail/has_member_function_callable_with.hpp COPYONLY)
