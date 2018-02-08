@@ -1,9 +1,9 @@
 # Function that finds all CMake files under the given directories
 # that do not contain text from exclude_search_dirs
-function(find_cmake_files search_dirs exclude_search_dirs output)
+function(find_cmake_files search_root search_dirs exclude_search_dirs output)
     set(all_cmake_files)
     foreach(dir ${search_dirs})
-        set(search_dir "${CMAKE_CURRENT_SOURCE_DIR}/${dir}")
+        set(search_dir "${search_root}/${dir}")
         message(STATUS "Searching ${search_dir}")
         file(GLOB_RECURSE cmake_files "${search_dir}/CMakeLists.txt")
         foreach(cmake_file ${cmake_files})
