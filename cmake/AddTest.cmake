@@ -28,8 +28,8 @@ function(tycho_add_test name link_libs folder)
 
 		# setup library dependencies
 		if(ty_platform_windows)
-			set(boost_test   "libboost_unit_test_framework-vc110-mt-1_55")
-			set(boost_test_d "libboost_unit_test_framework-vc110-mt-gd-1_55")
+			set(boost_test   "libboost_unit_test_framework-vc141-mt-x64-1_66")
+			set(boost_test_d "libboost_unit_test_framework-vc141-mt-gd-x64-1_66")
 
                         target_link_libraries(${test_name} ${link_libs} "tytest" debug ${boost_test_d} optimized ${boost_test})
                 else()
