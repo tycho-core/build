@@ -7,12 +7,12 @@ function(tycho_add_application_aux name link_libs folder win32)
 
 	# get all files in this directory
 	file(GLOB_RECURSE dir_files "*.*")
-		
+
 	# filter out all files we will include in project
 	list_filter(dir_files file_types OUTPUT_VARIABLE all_files)
-		
+
 	add_executable(${name} ${win32} ${all_files})
-	
+
 	target_link_libraries(${name} ${link_libs})
 
 	# add to solution folder
