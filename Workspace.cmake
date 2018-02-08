@@ -9,16 +9,28 @@ set(search_dirs
     tycho/third_party
 )
 
+# add each library search directory to the preprocessor includes
+#TODO: this could be a little more fine grained and each libary
+#      add only ones that it needs
+foreach(search_dir ${search_dirs})
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/${search_dir}")
+endforeach()
+
 #TODO: build dir needs to be set based on the location of this file
 #TODO: test/ is over agressive, need to limit to test folders under a folder that
 #      already contains a cmake file
 set(exclude_search_dirs
     tycho/lib/build
-    test/
+    tests/
 )
-find_cmake_files("${search_dirs}" "${exclude_search_dirs}" all_cmake_files)
+find_cmake_files("${CMAKE_CURRENT_SOURCE_DIR}" "${search_dirs}" "${exclude_search_dirs}" all_cmake_files)
+
+message(STATUS ${all_cmake_files})
+
 foreach(cmake_file ${all_cmake_files})
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" cmake_file "${cmake_file}")
+    string(REPLACE "CMakeLists.txt" "" cmake_file "${cmake_file}")
     message(STATUS ${cmake_file})
-    include(${cmake_file})
+    add_subdirectory(${cmake_file})
 endforeach()
 
