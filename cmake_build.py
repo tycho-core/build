@@ -1,3 +1,4 @@
+from __future__ import print_function
 import argparse
 import sys
 import os.path
@@ -13,6 +14,7 @@ GENERATOR_SHORT_NAME = 'short_name'
 GENERATOR_NAME = 'name'
 GENERATOR_STR = 'string'
 GENERATOR_PATH = 'path'
+GENERATOR_BUILD_DIR = 'build_dir'
 TOOLSETS    = 'toolsets'
 TOOLSET_NAME = 'toolset_name'
 TOOLSET_STR  = 'toolset_str'
@@ -26,20 +28,20 @@ PLATFORM_OPTS = {
 	# -----------------------------------------------------------------------------
 	'win32' : {
 		GENERATORS : [
-
 			{
-				GENERATOR_SHORT_NAME : 'vs2013',
-				GENERATOR_NAME : 'Visual Studio 2013',
-				GENERATOR_STR  : 'Visual Studio 12',
+				GENERATOR_SHORT_NAME : 'vs2017 32bit',
+				GENERATOR_NAME : 'Visual Studio 2017 32bit',
+				GENERATOR_STR  : 'Visual Studio 15 2017',
+				GENERATOR_BUILD_DIR : 'win32',
 				TOOLSETS       : [
-
 				]
 			},
 			{
-				GENERATOR_SHORT_NAME : 'vs2015',
-				GENERATOR_NAME : 'Visual Studio 2015',
-				GENERATOR_STR  : 'Visual Studio 14',
-				TOOLSETS       : [					
+				GENERATOR_SHORT_NAME : 'vs2017',
+				GENERATOR_NAME : 'Visual Studio 2017 64bit',
+				GENERATOR_STR  : 'Visual Studio 15 2017 Win64',
+				GENERATOR_BUILD_DIR : 'win64',
+				TOOLSETS       : [
 				]
 			}
 		],
@@ -56,13 +58,15 @@ PLATFORM_OPTS = {
 				GENERATOR_SHORT_NAME : 'sublime',
 				GENERATOR_NAME 		 : 'Sublime Text',
 				GENERATOR_STR  		 : 'Sublime Text 2 - Unix Makefiles',
+				GENERATOR_BUILD_DIR : 'osx',
 				TOOLSETS          	 : []
 			},
 			{
 				GENERATOR_SHORT_NAME : 'xcode',
 				GENERATOR_NAME 		 : 'Xcode',
 				GENERATOR_STR  		 : 'Xcode',
-				TOOLSETS             : []		
+				GENERATOR_BUILD_DIR : 'osx',
+				TOOLSETS             : []
 			}
 		],
 		CMAKE_COMMAND : 'cmake',
@@ -148,7 +152,7 @@ if GeneratorName == None or len(GeneratorName) == 0:
 			name = g[GENERATOR_NAME]
 			print("%s) %s" % (str(i), name))
 			Selections.append([g, None])
-			i += 1;
+			i += 1
 			for t in g[TOOLSETS]:
 				print("%s) %s - %s" % (str(i), name, t[TOOLSET_STR]))
 				Selections.append([g, t])
@@ -169,7 +173,7 @@ else:
 if Generator == None:
 	error("Failed to find generator : " + GeneratorName)
 
-Generator[GENERATOR_PATH] = os.path.join(BaseDir, "build", Platform, Generator[GENERATOR_SHORT_NAME]);
+Generator[GENERATOR_PATH] = os.path.join(BaseDir, "build", Generator[GENERATOR_BUILD_DIR], Generator[GENERATOR_SHORT_NAME])
 CMakeCommand = PlatformOpts[CMAKE_COMMAND]
 if PlatformOpts[CMAKE_COMMAND_RELATIVE]:
 	CMakeCommand = os.path.join(ScriptDir, CMakeCommand)
