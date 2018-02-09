@@ -67,11 +67,11 @@ endif()
 
 # OS X
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        set(ty_platform_osx 1)
+    set(ty_platform_osx 1)
 	set(ty_platform "osx")
-	set(ty_platform_dir "osx")
+	set(ty_platform_dir "linux")
 	set(ty_platform_ignore_dirs "pc" "gc")
-        set(ty_compiler_clang 1)
+    set(ty_compiler_clang 1)
 	add_definitions(-DTYCHO_LINUX=1 -DTYCHO_OSX=1)
 
 	# QT / Command line
@@ -105,7 +105,7 @@ endif()
 # configure boost
 if(ty_use_boost)
 	set(USE_BOOST_CACHE 1)
-	set(TargetArchitecture "x86")
+	set(TargetArchitecture "x86_64")
 	include("${CMAKE_CURRENT_LIST_DIR}/cmake/AddBoost.cmake")
 	include_directories("${BoostSourceDir}")
 	link_directories("${BoostSourceDir}/stage/lib/")
