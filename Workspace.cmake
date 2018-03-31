@@ -5,6 +5,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt")
 #TODO: These need to be set per workspace based on the configured
 #      directory mappings
 set(search_dirs
+    tycho/app
     tycho/lib
     tycho/third_party
 )
