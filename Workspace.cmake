@@ -2,19 +2,11 @@ cmake_minimum_required (VERSION 2.8)
 
 include("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt")
 
-#TODO: These need to be set per workspace based on the configured
-#      directory mappings
-set(search_dirs
-    tycho/app
-    tycho/lib
-    tycho/third_party
-)
-
 # add each library search directory to the preprocessor includes
 #TODO: this could be a little more fine grained and each libary
 #      add only ones that it needs
-foreach(search_dir ${search_dirs})
-    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/${search_dir}")
+foreach(search_dir ${TYCHO_CMAKE_SEARCH_DIRS})
+    include_directories("${search_dir}")
 endforeach()
 
 #TODO: build dir needs to be set based on the location of this file
@@ -24,7 +16,7 @@ set(exclude_search_dirs
     tycho/lib/build
     tests/
 )
-find_cmake_files("${CMAKE_CURRENT_SOURCE_DIR}" "${search_dirs}" "${exclude_search_dirs}" all_cmake_files)
+find_cmake_files("${TYCHO_CMAKE_SEARCH_DIRS}" "${exclude_search_dirs}" all_cmake_files)
 
 message(STATUS ${all_cmake_files})
 
