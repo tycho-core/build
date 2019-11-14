@@ -21,7 +21,9 @@ set(ty_compiler_intel 0)
 set(ty_buildenv_qt 0)
 set(ty_platform_osx 0)
 set(ty_platform_windows 0)
+set(ty_platform_linux 0)
 set(ty_use_boost 1)
+set(ty_platform_ignore_dirs)
 
 # setup global defines
 add_definitions(-DTYCHO)
@@ -32,6 +34,16 @@ add_definitions(-DTYCHO_ASSERT_ENABLED=1)
 #------------------------------------------------------------------------------
 message(STATUS "System is ${CMAKE_SYSTEM_NAME}")
 message(STATUS "Compiler is ${CMAKE_CXX_COMPILER_ID}")
+
+# Linux
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(ty_platform_linux 1)
+	set(ty_platform "linux")
+	set(ty_platform_dir "linux")
+	set(ty_platform_ignore_dirs "pc" "gc" "osx")
+    set(ty_compiler_clang 0)
+	add_definitions(-DTYCHO_LINUX=1)
+endif()
 
 # Windows
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -111,9 +123,12 @@ if(ty_use_boost)
 	link_directories("${BoostSourceDir}/stage/lib/")
 endif()
 
-# add tycho lib directory for all
+# add tycho lib directory for all projects
 message(STATUS "Current source dir = ${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")
+
+# add top level directory for all projects
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
 # QT doesn't seem to use the output directories correctly.
 # force to build debug for now.

@@ -6,9 +6,23 @@ function(tycho_add_library name link_libs solution_folder)
 
 	# get all files in this directory
 	file(GLOB_RECURSE dir_files "*.*")
-		
+
+	# filter out files not for this platform	
+	set(filtered_files)
+	message(STATUS "filtering '${ty_platform_ignore_dirs}'")
+	foreach(d ${ty_platform_ignore_dirs})
+		foreach(dir_file ${dir_files})
+			if(NOT ${dir_file} MATCHES "${CMAKE_CURRENT_SOURCE_DIR}/${d}/.*")
+				LIST(APPEND filtered_files ${dir_file})
+				message(STATUS "Including: ${dir_file}")
+			else()
+				message(STATUS "Excluding: ${dir_file} in ${CMAKE_CURRENT_SOURCE_DIR}/${d}")
+			endif()
+		endforeach()
+	endforeach()
+
 	# filter out all files we will include in project
-	list_filter(dir_files file_types OUTPUT_VARIABLE tmp_files)
+	list_filter(filtered_files file_types OUTPUT_VARIABLE tmp_files)
 	
 	# filter out all test files	
 	set(all_files)

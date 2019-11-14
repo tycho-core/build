@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.1)
 
-# Clang : disble the passed list of warnings in the CXX and C flags.
+# Clang : disable the passed list of warnings in the CXX and C flags.
 macro(ty_clang_warning_disable warnings)
     if(ty_compiler_clang)
         set(flags "")

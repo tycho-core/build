@@ -28,9 +28,9 @@ PLATFORM_OPTS = {
     'linux2': {
         GENERATORS: [
                 {
-                    GENERATOR_SHORT_NAME: 'ninja',
-                    GENERATOR_NAME: 'ninja',
-                    GENERATOR_STR: 'Ninja',
+                    GENERATOR_SHORT_NAME: 'make',
+                    GENERATOR_NAME: 'make',
+                    GENERATOR_STR: 'Unix Makefiles',
                     GENERATOR_BUILD_DIR: 'linux2',
                     TOOLSETS: []
                 }
