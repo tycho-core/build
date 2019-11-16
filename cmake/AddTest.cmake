@@ -29,6 +29,8 @@ function(tycho_add_test name link_libs folder)
 			target_link_libraries(${test_name} "ncurses")
 		endif()
 
+		target_link_libraries(${test_name} ${link_libs})
+
 		
 		# add to solution folder
 		set_target_properties(${test_name} PROPERTIES FOLDER "tests") 
