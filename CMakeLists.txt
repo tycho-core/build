@@ -21,7 +21,10 @@ set(ty_compiler_intel 0)
 set(ty_buildenv_qt 0)
 set(ty_platform_osx 0)
 set(ty_platform_windows 0)
-set(ty_use_boost 1)
+
+if(NOT ty_use_boost)
+	set(ty_use_boost 0)
+endif()
 
 # setup global defines
 add_definitions(-DTYCHO)
@@ -103,6 +106,7 @@ if(NOT PYTHONINTERP_FOUND OR NOT EXISTS "${PYTHON_EXECUTABLE}")
 endif()
 
 # configure boost
+message(STATUS "UseBoost=${ty_use_boost}")
 if(ty_use_boost)
 	set(USE_BOOST_CACHE 1)
 	set(TargetArchitecture "x86_64")

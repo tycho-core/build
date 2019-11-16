@@ -22,20 +22,10 @@ function(tycho_add_test name link_libs folder)
 			remove_definitions("-D${dll_export}")
 		endif()
 
-                add_executable(${test_name} ${all_files})
+        add_executable(${test_name} ${all_files})
 		add_test(NAME ${test_name} COMMAND $<TARGET_FILE:${test_name}> WORKING_DIRECTORY "${test_dir}")
-                add_dependencies(${test_name} boost_test)
 
 		# setup library dependencies
-		if(ty_platform_windows)
-			set(boost_test   "libboost_unit_test_framework-vc141-mt-x64-1_66")
-			set(boost_test_d "libboost_unit_test_framework-vc141-mt-gd-x64-1_66")
-
-                        target_link_libraries(${test_name} ${link_libs} "tytest" debug ${boost_test_d} optimized ${boost_test})
-                else()
-                        target_link_libraries(${test_name} ${link_libs} "tytest" "boost_unit_test_framework-mt")
-		endif()
-		
 		
 		# add to solution folder
 		set_target_properties(${test_name} PROPERTIES FOLDER "tests") 
