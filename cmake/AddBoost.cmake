@@ -77,8 +77,8 @@ function(ty_find_intel_compiler)
 		endif()
 endfunction()	
 
-set(BoostVersion 1.66.0)
-set(BoostSHA1 b6b284acde2ad7ed49b44e856955d7b1ea4e9459)
+set(BoostVersion 1.70.0)
+set(BoostSHA1 5b2e5ccc454503cfbba6c1221f5d495f0de279ea)
 
 
 
@@ -156,6 +156,8 @@ set(ZipFilePath "${BoostCacheDir}/${BoostFolderName}.tar.bz2")
 if(NOT EXISTS ${ZipFilePath})
   message(STATUS "Downloading boost ${BoostVersion} to ${BoostCacheDir}")
 endif()
+message(STATUS "http://sourceforge.net/projects/boost/files/boost/${BoostVersion}/${BoostFolderName}.tar.bz2/download
+${ZipFilePath}")
 file(DOWNLOAD http://sourceforge.net/projects/boost/files/boost/${BoostVersion}/${BoostFolderName}.tar.bz2/download
      ${ZipFilePath}
      STATUS Status
