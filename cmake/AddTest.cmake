@@ -24,8 +24,11 @@ function(tycho_add_test name link_libs folder)
 
         add_executable(${test_name} ${all_files})
 		add_test(NAME ${test_name} COMMAND $<TARGET_FILE:${test_name}> WORKING_DIRECTORY "${test_dir}")
+		
+		if(ty_platform_linux)
+			target_link_libraries(${test_name} "ncurses")
+		endif()
 
-		# setup library dependencies
 		
 		# add to solution folder
 		set_target_properties(${test_name} PROPERTIES FOLDER "tests") 

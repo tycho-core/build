@@ -22,35 +22,64 @@ CMAKE_COMMAND = 'cmake'
 CMAKE_COMMAND_RELATIVE = 'cmake_rel'
 
 PLATFORM_OPTS = {
+    # -----------------------------------------------------------------------------
+    # Linux
+    # -----------------------------------------------------------------------------
+    'linux2': {
+        GENERATORS: [
+                {
+                    GENERATOR_SHORT_NAME: 'make',
+                    GENERATOR_NAME: 'make',
+                    GENERATOR_STR: 'Unix Makefiles',
+                    GENERATOR_BUILD_DIR: 'linux2',
+                    TOOLSETS: []
+                }
+        ],
+        CMAKE_COMMAND: 'cmake',
+        CMAKE_COMMAND_RELATIVE: False
+    },
+    'linux': {
+        GENERATORS: [
+            {
+                GENERATOR_SHORT_NAME: 'make',
+                GENERATOR_NAME: 'make',
+                GENERATOR_STR: 'Unix Makefiles',
+                GENERATOR_BUILD_DIR: 'linux',
+                TOOLSETS: []
+            }
+        ],
+        CMAKE_COMMAND: 'cmake',
+        CMAKE_COMMAND_RELATIVE: False
+    },
 
     # -----------------------------------------------------------------------------
     # Windows
     # -----------------------------------------------------------------------------
     'win32': {
         GENERATORS: [
-                {
-                    GENERATOR_SHORT_NAME: 'vs2019',
-                    GENERATOR_NAME: 'Visual Studio 2019',
-                    GENERATOR_STR: 'Visual Studio 16 2019',
-                    GENERATOR_BUILD_DIR: 'win64',
-                    TOOLSETS: [
-                    ]
-                },
             {
-                    GENERATOR_SHORT_NAME: 'vs2017 32bit',
-                    GENERATOR_NAME: 'Visual Studio 2017 32bit',
-                    GENERATOR_STR: 'Visual Studio 15 2017',
-                    GENERATOR_BUILD_DIR: 'win32',
-                    TOOLSETS: [
-                    ]
+                GENERATOR_SHORT_NAME: 'vs2019',
+                GENERATOR_NAME: 'Visual Studio 2019',
+                GENERATOR_STR: 'Visual Studio 16 2019',
+                GENERATOR_BUILD_DIR: 'win64',
+                TOOLSETS: [
+                ]
             },
             {
-                    GENERATOR_SHORT_NAME: 'vs2017',
-                    GENERATOR_NAME: 'Visual Studio 2017 64bit',
-                    GENERATOR_STR: 'Visual Studio 15 2017 Win64',
-                    GENERATOR_BUILD_DIR: 'win64',
-                    TOOLSETS: [
-                    ]
+                GENERATOR_SHORT_NAME: 'vs2017 32bit',
+                GENERATOR_NAME: 'Visual Studio 2017 32bit',
+                GENERATOR_STR: 'Visual Studio 15 2017',
+                GENERATOR_BUILD_DIR: 'win32',
+                TOOLSETS: [
+                ]
+            },
+            {
+                GENERATOR_SHORT_NAME: 'vs2017',
+                GENERATOR_NAME: 'Visual Studio 2017 64bit',
+                GENERATOR_STR: 'Visual Studio 15 2017 Win64',
+                GENERATOR_BUILD_DIR: 'win64',
+                TOOLSETS: [
+                ]
             }
         ],
         CMAKE_COMMAND: 'tools/bin/cmake/bin/cmake.exe',

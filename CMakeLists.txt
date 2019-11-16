@@ -25,6 +25,8 @@ set(ty_platform_windows 0)
 if(NOT ty_use_boost)
 	set(ty_use_boost 0)
 endif()
+set(ty_platform_linux 0)
+set(ty_platform_ignore_dirs)
 
 # setup global defines
 add_definitions(-DTYCHO)
@@ -35,6 +37,16 @@ add_definitions(-DTYCHO_ASSERT_ENABLED=1)
 #------------------------------------------------------------------------------
 message(STATUS "System is ${CMAKE_SYSTEM_NAME}")
 message(STATUS "Compiler is ${CMAKE_CXX_COMPILER_ID}")
+
+# Linux
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(ty_platform_linux 1)
+	set(ty_platform "linux")
+	set(ty_platform_dir "linux")
+	set(ty_platform_ignore_dirs "pc" "gc" "osx")
+    set(ty_compiler_clang 0)
+	add_definitions(-DTYCHO_LINUX=1)
+endif()
 
 # Windows
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -115,9 +127,12 @@ if(ty_use_boost)
 	link_directories("${BoostSourceDir}/stage/lib/")
 endif()
 
-# add tycho lib directory for all
+# add tycho lib directory for all projects
 message(STATUS "Current source dir = ${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")
+
+# add top level directory for all projects
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
 # QT doesn't seem to use the output directories correctly.
 # force to build debug for now.
@@ -133,12 +148,19 @@ endif()
 
 # override where libraries, dll's and executable get built to
 set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/release)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/release)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/debug)
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ty_platform_dir})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir}/lib/release)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/lib/debug)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ty_platform_dir})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/debug)
+
 
 # Output shared libraries to binary directory when using QT
 # TODO: may need this for other osx / linux buildenv's.
