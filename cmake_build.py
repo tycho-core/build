@@ -38,6 +38,19 @@ PLATFORM_OPTS = {
         CMAKE_COMMAND: 'cmake',
         CMAKE_COMMAND_RELATIVE: False
     },
+    'linux': {
+        GENERATORS: [
+                {
+                    GENERATOR_SHORT_NAME: 'make',
+                    GENERATOR_NAME: 'make',
+                    GENERATOR_STR: 'Unix Makefiles',
+                    GENERATOR_BUILD_DIR: 'linux',
+                    TOOLSETS: []
+                }
+        ],
+        CMAKE_COMMAND: 'cmake',
+        CMAKE_COMMAND_RELATIVE: False
+    },
 
     # -----------------------------------------------------------------------------
     # Windows
