@@ -28,6 +28,10 @@ endif()
 set(ty_platform_linux 0)
 set(ty_platform_ignore_dirs)
 
+if(NOT ty_static_lib)
+	set(ty_static_lib 0)
+endif()
+
 # setup global defines
 add_definitions(-DTYCHO)
 add_definitions(-DTYCHO_ASSERT_ENABLED=1)

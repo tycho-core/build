@@ -45,11 +45,17 @@ function(tycho_add_library name link_libs solution_folder)
 	endforeach()
 	
 	# setup dll export when building the library
-	if(MSVC)
-		string(TOUPPER TYCHO_${name}_EXPORTS dll_export)
-		add_definitions("-D${dll_export}")
+	if(ty_static_lib)
+		string(TOUPPER TYCHO_${name}_STATIC_LIB static_lib)
+		add_definitions("-D${static_lib}")
+		add_library(${lib_name} ${all_files})
+	else()
+		if(MSVC)
+			string(TOUPPER TYCHO_${name}_EXPORTS dll_export)
+			add_definitions("-D${dll_export}")
+		endif()
+		add_library(${lib_name} SHARED ${all_files})
 	endif()
-	add_library(${lib_name} SHARED ${all_files})
 	
 	# setup library dependencies
 	foreach(lib ${link_libs})
