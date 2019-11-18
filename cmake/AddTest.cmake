@@ -29,7 +29,7 @@ function(tycho_add_test name link_libs folder)
 			target_link_libraries(${test_name} "ncurses")
 		endif()
 
-		target_link_libraries(${test_name} ${link_libs})
+		target_link_libraries(${test_name} "${link_libs}")
 
 		
 		# add to solution folder
