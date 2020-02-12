@@ -233,6 +233,9 @@ if PlatformOpts[CMAKE_COMMAND_RELATIVE]:
 CMakeCmdLine = [CMakeCommand]
 if Toolset != None:
     CMakeCmdLine.extend(['-T', Toolset[TOOLSET_NAME]])
+
+CMakeCmdLine.extend([ ' -DCMAKE_BUILD_TYPE=Debug'])                     
+
 CMakeCmdLine.extend(['-G', Generator[GENERATOR_STR],
                      str("..%s..%s..%s" % (os.sep, os.sep, os.sep))])
 

@@ -42,6 +42,10 @@ add_definitions(-DTYCHO_ASSERT_ENABLED=1)
 message(STATUS "System is ${CMAKE_SYSTEM_NAME}")
 message(STATUS "Compiler is ${CMAKE_CXX_COMPILER_ID}")
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(ty_platform_linux 1)
@@ -50,6 +54,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(ty_platform_ignore_dirs "pc" "gc" "osx")
     set(ty_compiler_clang 0)
 	add_definitions(-DTYCHO_LINUX=1)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -g")
+	set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -g")
 endif()
 
 # Windows
