@@ -31,7 +31,7 @@ PLATFORM_OPTS = {
                     GENERATOR_SHORT_NAME: 'make',
                     GENERATOR_NAME: 'make',
                     GENERATOR_STR: 'Unix Makefiles',
-                    GENERATOR_BUILD_DIR: 'linux2',
+                    GENERATOR_BUILD_DIR: 'linux',
                     TOOLSETS: []
                 }
         ],
