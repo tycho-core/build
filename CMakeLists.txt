@@ -1,9 +1,12 @@
 cmake_minimum_required (VERSION 3.1)
 
+
+SET(TYCHO_USE_CUSTOM_OUTPUT_DIRS 1 CACHE BOOL "Use custom output directories. Disable when running from visual studio")
+
 # check we are building out of tree in the build directory
 message(STATUS "Binary directory is ${CMAKE_BINARY_DIR}")
 if(NOT ${CMAKE_BINARY_DIR} MATCHES ".+/build(/.*)?$")
-	message(FATAL_ERROR "cmake must be run from build directory not from ${CMAKE_BINARY_DIR}")
+    message(FATAL_ERROR "cmake must be run from build directory not from ${CMAKE_BINARY_DIR}")
 endif()
 
 # initial setup for unit testing
@@ -21,15 +24,16 @@ set(ty_compiler_intel 0)
 set(ty_buildenv_qt 0)
 set(ty_platform_osx 0)
 set(ty_platform_windows 0)
+set(ty_platform_arduino 0)
 
 if(NOT ty_use_boost)
-	set(ty_use_boost 0)
+    set(ty_use_boost 0)
 endif()
 set(ty_platform_linux 0)
 set(ty_platform_ignore_dirs)
 
 if(NOT ty_static_lib)
-	set(ty_static_lib 0)
+    set(ty_static_lib 0)
 endif()
 
 # setup global defines
@@ -46,16 +50,29 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+
+# Ardunio
+if(${CMAKE_SYSTEM_NAME} MATCHES "arduino")
+    set(ty_platform_arduino 1)
+    set(ty_platform "arduino")
+    set(ty_platform_dir "arduino")
+    set(ty_platform_ignore_dirs "pc" "gc" "osx" "linux")
+    set(ty_compiler_clang 0)
+    add_definitions(-DTYCHO_ARDUINO=1)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -g")
+endif()
+
 # Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(ty_platform_linux 1)
-	set(ty_platform "linux")
-	set(ty_platform_dir "linux")
-	set(ty_platform_ignore_dirs "pc" "gc" "osx")
+    set(ty_platform "linux")
+    set(ty_platform_dir "linux")
+    set(ty_platform_ignore_dirs "pc" "gc" "osx" "arduino")
     set(ty_compiler_clang 0)
-	add_definitions(-DTYCHO_LINUX=1)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -g")
-	set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -g")
+    add_definitions(-DTYCHO_LINUX=1)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -g")
 endif()
 
 # Windows
@@ -67,74 +84,74 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     # Visual Studio
     if(MSVC)
         set(ty_compiler_msvc 1)
-		set(ty_platform "pc")
-		set(ty_platform_dir "win32")
-		set(ty_platform_ignore_dirs "osx" "linux" "gc")
-		add_definitions(-DTYCHO_PC=1)
-		add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-		add_definitions(-D_VARIADIC_MAX=10)
-		add_definitions(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE)
-	
-		if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-			# Clang 3.5.0 does not support windows exceptions
-			add_definitions(-D_HAS_EXCEPTIONS=0)	 # disable standard library exceptions
-			add_definitions(-DTYCHO_NO_EXCEPTIONS=1) # disable our exceptions
-			add_definitions(-DBOOST_NO_EXCEPTIONS)    # boost exceptions
-			set(ty_compiler_clang 1)
-		elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Qstd=c++11")	
-			set(ty_compiler_intel 1)
-		else()
-			set(ty_compiler_msvc 1)
-		endif()	
+        set(ty_platform "pc")
+        set(ty_platform_dir "win32")
+        set(ty_platform_ignore_dirs "osx" "linux" "gc" "arduino")
+        add_definitions(-DTYCHO_PC=1)
+        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+        add_definitions(-D_VARIADIC_MAX=10)
+        add_definitions(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE)
+    
+        if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+            # Clang 3.5.0 does not support windows exceptions
+            add_definitions(-D_HAS_EXCEPTIONS=0)	 # disable standard library exceptions
+            add_definitions(-DTYCHO_NO_EXCEPTIONS=1) # disable our exceptions
+            add_definitions(-DBOOST_NO_EXCEPTIONS)    # boost exceptions
+            set(ty_compiler_clang 1)
+        elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Qstd=c++11")	
+            set(ty_compiler_intel 1)
+        else()
+            set(ty_compiler_msvc 1)
+        endif()	
     endif()
 endif()
 
 # OS X
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(ty_platform_osx 1)
-	set(ty_platform "osx")
-	set(ty_platform_dir "linux")
-	set(ty_platform_ignore_dirs "pc" "gc")
+    set(ty_platform "osx")
+    set(ty_platform_dir "linux")
+    set(ty_platform_ignore_dirs "pc" "gc" "arduino")
     set(ty_compiler_clang 1)
-	add_definitions(-DTYCHO_LINUX=1 -DTYCHO_OSX=1)
+    add_definitions(-DTYCHO_LINUX=1 -DTYCHO_OSX=1)
 
-	# QT / Command line
+    # QT / Command line
         set(ty_buildenv_qt 1)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11") 
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11") 
 
-	# Xcode
-	set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
-	set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
-	set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall")
+    # Xcode
+    set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
+    set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
+    set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall")
 endif()
 
 # check to see if the passed directory should be included in the
 # current build
 function(tycho_dir_ignored dir)
-	set(dir_ignored 0 PARENT_SCOPE)
-	foreach(d ${ty_platform_ignore_dirs})
-		if(${dir} MATCHES "${d}")
-			set(dir_ignored 1 PARENT_SCOPE)
-		endif()
-	endforeach()
+    set(dir_ignored 0 PARENT_SCOPE)
+    foreach(d ${ty_platform_ignore_dirs})
+        if(${dir} MATCHES "${d}")
+            set(dir_ignored 1 PARENT_SCOPE)
+        endif()
+    endforeach()
 endfunction()
 
 # some libraries use python scripts for code generation
 find_package(PythonInterp REQUIRED)
 if(NOT PYTHONINTERP_FOUND OR NOT EXISTS "${PYTHON_EXECUTABLE}")
-	message(FATAL_ERROR "Python is required to build tycho")
+    message(FATAL_ERROR "Python is required to build tycho")
 endif()
 
 # configure boost
 message(STATUS "UseBoost=${ty_use_boost}")
 if(ty_use_boost)
-	set(USE_BOOST_CACHE 1)
-	set(TargetArchitecture "x86_64")
-	include("${CMAKE_CURRENT_LIST_DIR}/cmake/AddBoost.cmake")
-	include_directories("${BoostSourceDir}")
-	link_directories("${BoostSourceDir}/stage/lib/")
+    set(USE_BOOST_CACHE 1)
+    set(TargetArchitecture "x86_64")
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/AddBoost.cmake")
+    include_directories("${BoostSourceDir}")
+    link_directories("${BoostSourceDir}/stage/lib/")
 endif()
 
 # add tycho lib directory for all projects
@@ -157,20 +174,20 @@ if(ty_buildenv_qt)
 endif()
 
 # override where libraries, dll's and executable get built to
-set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+if (${TYCHO_USE_CUSTOM_OUTPUT_DIRS})
+    set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/release)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/release)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/debug)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/release)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/release)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/archive/debug)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ty_platform_dir})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir}/lib/release)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/lib/debug)
 
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ty_platform_dir})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir}/lib/release)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/lib/debug)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ty_platform_dir})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/debug)
-
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ty_platform_dir})
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${ty_platform_dir})
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${ty_platform_dir}/debug)
+endif()
 
 # Output shared libraries to binary directory when using QT
 # TODO: may need this for other osx / linux buildenv's.
